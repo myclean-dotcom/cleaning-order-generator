@@ -2,41 +2,39 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Генератор заявок клининга</title>
+<title>Заявка клининг</title>
 <style>
-body { font-family: Arial, sans-serif; background:#f5f6f8; padding:20px;}
-.container { max-width:900px; margin:auto; background:#fff; padding:20px; border-radius:10px;}
-h2 { border-bottom:2px solid #eee; padding-bottom:5px;}
+body { font-family: Arial, sans-serif; background:#f4f6f9; padding:20px; }
+.container { max-width:900px; margin:auto; background:#fff; padding:20px; border-radius:12px; }
 label { display:block; margin-top:10px; }
-input, select, textarea { width:100%; padding:8px; margin-top:5px;}
+input, select, textarea { width:100%; padding:8px; margin-top:5px; }
 .inline { display:flex; gap:10px; }
-.inline input, .inline select { flex:1; }
-.checkbox-group label { display:block; margin-top:5px; }
-button { margin-top:15px; padding:10px 20px; font-size:16px; cursor:pointer; }
-.result { white-space: pre-wrap; background:#f1f1f1; padding:15px; margin-top:20px; border-radius:8px; }
+.inline > div { flex:1; }
+button { margin-top:20px; padding:12px; font-size:16px; cursor:pointer; }
+.result { margin-top:20px; background:#f1f1f1; padding:15px; border-radius:8px; white-space:pre-wrap; }
 </style>
 </head>
+
 <body>
 <div class="container">
-<h1>🧹 Генератор заявки для клининга</h1>
+<h1>🧹 Создание заявки</h1>
 
-<h2>Общая информация</h2>
-<label>Вид уборки</label>
+<label>Тип уборки</label>
 <select id="type">
   <option>Поддерживающая</option>
   <option>Генеральная</option>
   <option>После ремонта</option>
-  <option>Офис</option>
+  <option>Химчистка</option>
 </select>
 
 <div class="inline">
   <div>
     <label>Дата и время</label>
-    <input id="datetime" type="datetime-local">
+    <input type="datetime-local" id="datetime">
   </div>
   <div>
     <label>Площадь (м²)</label>
-    <input id="area" type="number">
+    <input type="number" id="area">
   </div>
 </div>
 
@@ -48,168 +46,62 @@ button { margin-top:15px; padding:10px 20px; font-size:16px; cursor:pointer; }
 <label>Адрес</label>
 <input id="address">
 
-<h2>Заказчик</h2>
-<label>Имя</label>
-<input id="client">
-<label>Телефон</label>
-<input id="phone">
+<label>Сумма заказа (₽)</label>
+<input type="number" id="total">
 
-<h2>Финансы</h2>
-<label>Общая сумма (₽)</label>
-<input id="total" type="number" oninput="calcSalary()">
-<label>Зарплата мастеру</label>
-<select id="salaryType" onchange="calcSalary()">
-  <option value="60">60 / 40</option>
-  <option value="70">70 / 30</option>
-  <option value="fixed">Фиксированная</option>
-</select>
-<label>Фиксированная сумма (если выбрано)</label>
-<input id="fixedSalary" type="number" oninput="calcSalary()">
-<p><b>Мастеру:</b> <span id="masterPay">0</span> ₽</p>
-<p><b>Компании:</b> <span id="companyPay">0</span> ₽</p>
+<label>Оплата мастеру (₽)</label>
+<input type="number" id="masterPay">
 
-<h2>Работы</h2>
-<label>Мытьё окон</label>
-<div class="inline">
-  <select id="windowsSide">
-    <option>Одна сторона</option>
-    <option>Две стороны</option>
-  </select>
-  <input id="windowsCount" placeholder="Количество створок">
-  <select id="windowsType">
-    <option>Стандартные</option>
-    <option>Нестандартные</option>
-  </select>
-</div>
-<label>Дополнительно</label>
-<div class="checkbox-group">
-  <label><input type="checkbox" id="dustCeiling"> Обеспыливание потолка</label>
-  <label><input type="checkbox" id="dustWalls"> Обеспыливание стен</label>
-  <label><input type="checkbox" id="closets"> Мытьё шкафов</label>
-  <select id="closetsType">
-    <option>Убирать внутри</option>
-    <option>Не убирать внутри</option>
-  </select>
-</div>
+<label>Описание работ</label>
+<textarea id="works"></textarea>
 
-<h3>Бытовая техника</h3>
-<div class="checkbox-group">
-  <label><input type="checkbox" value="Духовой шкаф" class="tech"> Духовой шкаф</label>
-  <label><input type="checkbox" value="Плита" class="tech"> Плита</label>
-  <label><input type="checkbox" value="Холодильник" class="tech"> Холодильник</label>
-  <label><input type="checkbox" value="Вытяжка" class="tech"> Вытяжка</label>
-  <label><input type="checkbox" value="Микроволновка" class="tech"> Микроволновка</label>
-  <label><input type="checkbox" value="Чайник" class="tech"> Чайник</label>
-  <label><input type="checkbox" value="Кофемашина" class="tech"> Кофемашина</label>
-  <label><input type="checkbox" value="Посудомойка" class="tech"> Посудомойка</label>
-</div>
+<button onclick="send()">📨 Отправить заявку</button>
 
-<h3>Ванная</h3>
-<div class="checkbox-group">
-  <label><input type="checkbox" id="tiles"> Кафель</label>
-  <label><input type="checkbox" id="plumbing"> Сантехника</label>
-  <label><input type="checkbox" id="shower"> Душевая</label>
-  <label><input type="checkbox" id="bath"> Ванна</label>
-</div>
-
-<h2>Оборудование</h2>
-<div class="checkbox-group">
-  <label><input type="checkbox" id="ladder"> Стремянка</label>
-  <label><input type="checkbox" id="vacuum"> Пылесос</label>
-  <label><input type="checkbox" id="steam"> Парогенератор</label>
-  <label><input type="checkbox" id="windowCleaner"> Мойщик окон</label>
-  <label><input type="checkbox" id="bucket"> Ведро</label>
-  <label><input type="checkbox" id="mop"> Мопы</label>
-  <label><input type="checkbox" id="mopHolder"> Держатель мопов</label>
-</div>
-
-<h2>Химия</h2>
-<div class="checkbox-group">
-  <label><input type="checkbox" id="universal"> Универсальное моющее средство</label>
-  <label><input type="checkbox" id="degasser"> Средство для удаления жира</label>
-  <label><input type="checkbox" id="scaleRemover"> Средство для удаления налёта</label>
-  <label><input type="checkbox" id="sanitary"> Средство для сантехники</label>
-  <label><input type="checkbox" id="construction"> Средство для удаления строительных загрязнений</label>
-  <label><input type="checkbox" id="antiscotch"> Антискотч</label>
-</div>
-
-<h2>Дополнительно</h2>
-<textarea id="comment" placeholder="Пожелания заказчика"></textarea>
-
-<button onclick="generate('telegram')">Отправить в Telegram</button>
-<button onclick="generate('whatsapp')">Отправить в WhatsApp</button>
-
-<div id="output" class="result"></div>
+<div id="out" class="result"></div>
 </div>
 
 <script>
-function calcSalary() {
-    const total = Number(document.getElementById('total').value||0);
-    const type = document.getElementById('salaryType').value;
-    let master = type==='fixed' ? Number(document.getElementById('fixedSalary').value||0) : total*(type/100);
-    document.getElementById('masterPay').innerText = master.toFixed(0);
-    document.getElementById('companyPay').innerText = (total-master).toFixed(0);
+function generateOrderId() {
+  return 'CLN-' + Date.now().toString().slice(-6);
 }
 
-function generate(platform) {
-    let work=[];
-    if(document.getElementById('windowsSide').value) {
-        let count=document.getElementById('windowsCount').value||'?';
-        let typeWin=document.getElementById('windowsType').value;
-        work.push(`Окна: ${document.getElementById('windowsSide').value}, створок ${count}, ${typeWin}`);
-    }
-    if(document.getElementById('dustCeiling').checked) work.push('Обеспыливание потолка');
-    if(document.getElementById('dustWalls').checked) work.push('Обеспыливание стен');
-    if(document.getElementById('closets').checked) work.push(`Шкафы: ${document.getElementById('closetsType').value}`);
+function send() {
+  const orderId = generateOrderId();
 
-    let tech=[...document.querySelectorAll('.tech:checked')].map(e=>e.value);
-    if(tech.length) work.push(`Техника: ${tech.join(', ')}`);
+  // 🔴 ВАЖНО: вставишь СВОЮ ссылку Google Form ниже
+  const googleFormBase =
+    'https://docs.google.com/forms/d/e/FORM_ID/viewform?usp=pp_url';
 
-    if(document.getElementById('tiles').checked) work.push('Кафель');
-    if(document.getElementById('plumbing').checked) work.push('Сантехника');
-    if(document.getElementById('shower').checked) work.push('Душевая');
-    if(document.getElementById('bath').checked) work.push('Ванна');
+  const formLink =
+    googleFormBase +
+    '&entry.111=' + encodeURIComponent(orderId) +
+    '&entry.222=' + encodeURIComponent(address.value) +
+    '&entry.333=' + encodeURIComponent(type.value) +
+    '&entry.444=' + encodeURIComponent(datetime.value);
 
-    let eqList=['ladder','vacuum','steam','windowCleaner','bucket','mop','mopHolder'];
-    let equipment=eqList.filter(id=>document.getElementById(id).checked)
-                        .map(id=>document.getElementById(id).nextSibling.textContent.trim());
+  const text =
+`🧹 ЗАЯВКА № ${orderId}
 
-    let chemList=['universal','degasser','scaleRemover','sanitary','construction','antiscotch'];
-    let chemistry=chemList.filter(id=>document.getElementById(id).checked)
-                          .map(id=>document.getElementById(id).nextSibling.textContent.trim());
-
-    let text=`🧹 ЗАЯВКА НА УБОРКУ
-
-Вид: ${type.value}
-Дата и время: ${datetime.value}
+Тип: ${type.value}
+Дата: ${datetime.value}
 Город: ${city.value}
 Адрес: ${address.value}
 Площадь: ${area.value} м²
 
-Заказчик: ${client.value}
-Телефон: ${phone.value}
-
-💰 Финансы:
-Общая сумма: ${total.value} ₽
-Мастеру: ${masterPay.innerText} ₽
+💰 Сумма: ${total.value} ₽
+👤 Мастеру: ${masterPay.value} ₽
 
 📋 Работы:
-${work.join('\n')}
+${works.value}
 
-🛠 Оборудование: ${equipment.join(', ') || 'Не указано'}
-🧴 Химия: ${chemistry.join(', ') || 'Не указано'}
+📷 Фото: прикреплены ниже в чате
 
-Комментарий:
-${comment.value || 'Нет'}
+👉 ВЗЯТЬ ЗАЯВКУ (анонимно):
+${formLink}
 `;
 
-    document.getElementById('output').innerText=text;
-
-    if(platform==='telegram') {
-        window.open(`https://t.me/share/url?text=${encodeURIComponent(text)}`);
-    } else if(platform==='whatsapp') {
-        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
-    }
+  out.innerText = text;
+  window.open('https://t.me/share/url?text=' + encodeURIComponent(text));
 }
 </script>
 </body>
