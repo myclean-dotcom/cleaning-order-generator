@@ -174,8 +174,18 @@ function send() {
   const orderId = generateOrderId();
   calculateMasterPay();
 
-  const checkboxes = Array.from(document.querySelectorAll('.checkbox-group input[type=checkbox]:checked'))
-      .map(c => c.parentNode.innerText).join(', ');
+  function getCheckedList(groupId){
+    const group = document.querySelectorAll(`#${groupId} input[type=checkbox]:checked`);
+    return Array.from(group).map(c=>c.parentNode.innerText);
+  }
+
+  const worksList = [];
+  const windowsList = getCheckedList('windows1side') + getCheckedList('windows2side');
+  const dustList = getCheckedList('dustCeiling') + getCheckedList('dustWalls');
+  const cabinetsList = getCheckedList('cabinetsOutside') + getCheckedList('cabinetsInside');
+  const techList = getCheckedList('oven') + getCheckedList('stove') + getCheckedList('fridge') + getCheckedList('hood') + getCheckedList('microwave') + getCheckedList('kettle') + getCheckedList('coffee') + getCheckedList('dishwasher');
+  const equipmentList = getCheckedList('ladder') + getCheckedList('vacuum') + getCheckedList('steam') + getCheckedList('windowWasher') + getCheckedList('bucket') + getCheckedList('mops') + getCheckedList('mopHolder');
+  const chemList = getCheckedList('universal') + getCheckedList('degreaser') + getCheckedList('scaleRemover') + getCheckedList('sanitaryCleaner') + getCheckedList('constructionCleaner') + getCheckedList('antiscotch');
 
   const text = 
 `🧹 ЗАКАЗ НА УБОРКУ №${orderId}
@@ -192,11 +202,32 @@ function send() {
 Адрес: ${document.getElementById('customerAddress').value}
 Квартира: ${document.getElementById('customerFlat').value}
 
-💬 ДОПОЛНИТЕЛЬНО:
-Описание: ${document.getElementById('works').value}
-Выбранные опции: ${checkboxes}
+💬 Описание работ:
+${document.getElementById('works').value}
+
+🪟 Мытьё окон:
 Количество створок: ${document.getElementById('windowCount').value}
-Мастеру: ${document.getElementById('masterPay').value} руб.
+${getCheckedList('windows1side').concat(getCheckedList('windows2side')).join('\n')}
+
+🧹 Обеспыливание:
+${getCheckedList('dustCeiling').concat(getCheckedList('dustWalls')).join('\n')}
+
+🚪 Шкафы:
+${getCheckedList('cabinetsOutside').concat(getCheckedList('cabinetsInside')).join('\n')}
+
+🔌 Бытовая техника:
+${getCheckedList('oven').concat(getCheckedList('stove')).concat(getCheckedList('fridge')).concat(getCheckedList('hood')).concat(getCheckedList('microwave')).concat(getCheckedList('kettle')).concat(getCheckedList('coffee')).concat(getCheckedList('dishwasher')).join('\n')}
+
+🛁 Ванная комната:
+${getCheckedList('tiles').concat(getCheckedList('sanitary')).concat(getCheckedList('bath')).join('\n')}
+
+🛠 Оборудование:
+${getCheckedList('ladder').concat(getCheckedList('vacuum')).concat(getCheckedList('steam')).concat(getCheckedList('windowWasher')).concat(getCheckedList('bucket')).concat(getCheckedList('mops')).concat(getCheckedList('mopHolder')).join('\n')}
+
+🧴 Химия:
+${getCheckedList('universal').concat(getCheckedList('degreaser')).concat(getCheckedList('scaleRemover')).concat(getCheckedList('sanitaryCleaner')).concat(getCheckedList('constructionCleaner')).concat(getCheckedList('antiscotch')).join('\n')}
+
+💰 Мастеру: ${document.getElementById('masterPay').value} руб.
 
 📷 Фото прикреплены менеджером в чате
 `;
