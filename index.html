@@ -90,67 +90,67 @@ button { margin-top:20px; padding:12px; font-size:16px; cursor:pointer; border:n
   <label>Количество створок</label>
   <input type="number" id="windowCount" placeholder="Введите количество створок">
 </div>
-<div class="checkbox-group">
-  <label><input type="checkbox" id="windows1side"> Только с одной стороны</label>
-  <label><input type="checkbox" id="windows2side"> С двух сторон</label>
+<div class="checkbox-group" id="windowsGroup">
+  <label><input type="checkbox" value="Только с одной стороны"> Только с одной стороны</label>
+  <label><input type="checkbox" value="С двух сторон"> С двух сторон</label>
 </div>
 
 <h3>Обеспыливание</h3>
-<div class="checkbox-group">
-  <label><input type="checkbox" id="dustCeiling"> Потолок</label>
-  <label><input type="checkbox" id="dustWalls"> Стены</label>
+<div class="checkbox-group" id="dustGroup">
+  <label><input type="checkbox" value="Потолок"> Потолок</label>
+  <label><input type="checkbox" value="Стены"> Стены</label>
 </div>
 
 <h3>Мытьё шкафов</h3>
-<div class="checkbox-group">
-  <label><input type="checkbox" id="cabinetsOutside"> Снаружи</label>
-  <label><input type="checkbox" id="cabinetsInside"> Снаружи и внутри</label>
+<div class="checkbox-group" id="cabinetsGroup">
+  <label><input type="checkbox" value="Снаружи"> Снаружи</label>
+  <label><input type="checkbox" value="Снаружи и внутри"> Снаружи и внутри</label>
 </div>
 
 <h3>Мытьё бытовой техники</h3>
-<div class="checkbox-group">
-  <label><input type="checkbox" id="oven"> Духовой шкаф</label>
-  <label><input type="checkbox" id="stove"> Плита</label>
-  <label><input type="checkbox" id="fridge"> Холодильник</label>
-  <label><input type="checkbox" id="hood"> Вытяжка</label>
-  <label><input type="checkbox" id="microwave"> Микроволновка</label>
-  <label><input type="checkbox" id="kettle"> Чайник</label>
-  <label><input type="checkbox" id="coffee"> Кофемашина</label>
-  <label><input type="checkbox" id="dishwasher"> Посудомойка</label>
+<div class="checkbox-group" id="techGroup">
+  <label><input type="checkbox" value="Духовой шкаф"> Духовой шкаф</label>
+  <label><input type="checkbox" value="Плита"> Плита</label>
+  <label><input type="checkbox" value="Холодильник"> Холодильник</label>
+  <label><input type="checkbox" value="Вытяжка"> Вытяжка</label>
+  <label><input type="checkbox" value="Микроволновка"> Микроволновка</label>
+  <label><input type="checkbox" value="Чайник"> Чайник</label>
+  <label><input type="checkbox" value="Кофемашина"> Кофемашина</label>
+  <label><input type="checkbox" value="Посудомойка"> Посудомойка</label>
 </div>
 
 <h3>Ванная комната</h3>
-<div class="checkbox-group">
-  <label><input type="checkbox" id="tiles"> Мытьё кафеля</label>
-  <label><input type="checkbox" id="sanitary"> Сантехника</label>
-  <label><input type="checkbox" id="bath"> Душевая/ванна</label>
+<div class="checkbox-group" id="bathGroup">
+  <label><input type="checkbox" value="Мытьё кафеля"> Мытьё кафеля</label>
+  <label><input type="checkbox" value="Сантехника"> Сантехника</label>
+  <label><input type="checkbox" value="Душевая/ванна"> Душевая/ванна</label>
 </div>
 </div>
 
 <!-- Оборудование -->
 <div class="section">
 <h2>Оборудование</h2>
-<div class="checkbox-group">
-  <label><input type="checkbox" id="ladder"> Стремянка</label>
-  <label><input type="checkbox" id="vacuum"> Пылесос</label>
-  <label><input type="checkbox" id="steam"> Парогенератор</label>
-  <label><input type="checkbox" id="windowWasher"> Мойщик окон</label>
-  <label><input type="checkbox" id="bucket"> Ведро</label>
-  <label><input type="checkbox" id="mops"> Мопы</label>
-  <label><input type="checkbox" id="mopHolder"> Держатель мопов</label>
+<div class="checkbox-group" id="equipmentGroup">
+  <label><input type="checkbox" value="Стремянка"> Стремянка</label>
+  <label><input type="checkbox" value="Пылесос"> Пылесос</label>
+  <label><input type="checkbox" value="Парогенератор"> Парогенератор</label>
+  <label><input type="checkbox" value="Мойщик окон"> Мойщик окон</label>
+  <label><input type="checkbox" value="Ведро"> Ведро</label>
+  <label><input type="checkbox" value="Мопы"> Мопы</label>
+  <label><input type="checkbox" value="Держатель мопов"> Держатель мопов</label>
 </div>
 </div>
 
 <!-- Химия -->
 <div class="section">
 <h2>Химия</h2>
-<div class="checkbox-group">
-  <label><input type="checkbox" id="universal"> Универсальное моющее средство</label>
-  <label><input type="checkbox" id="degreaser"> Средство для удаления жира</label>
-  <label><input type="checkbox" id="scaleRemover"> Средство для удаления налёта</label>
-  <label><input type="checkbox" id="sanitaryCleaner"> Средство для сантехники</label>
-  <label><input type="checkbox" id="constructionCleaner"> Средство для удаления строительных загрязнений</label>
-  <label><input type="checkbox" id="antiscotch"> Антискотч</label>
+<div class="checkbox-group" id="chemGroup">
+  <label><input type="checkbox" value="Универсальное моющее средство"> Универсальное моющее средство</label>
+  <label><input type="checkbox" value="Средство для удаления жира"> Средство для удаления жира</label>
+  <label><input type="checkbox" value="Средство для удаления налёта"> Средство для удаления налёта</label>
+  <label><input type="checkbox" value="Средство для сантехники"> Средство для сантехники</label>
+  <label><input type="checkbox" value="Средство для удаления строительных загрязнений"> Средство для удаления строительных загрязнений</label>
+  <label><input type="checkbox" value="Антискотч"> Антискотч</label>
 </div>
 <div class="label-input"><label>Дополнительные пожелания</label><textarea id="extra"></textarea></div>
 </div>
@@ -170,22 +170,22 @@ function calculateMasterPay() {
 
 function generateOrderId() { return 'CLN-'+Date.now().toString().slice(-6); }
 
+function getCheckedValues(groupId){
+  const group = document.querySelectorAll(`#${groupId} input[type=checkbox]:checked`);
+  return Array.from(group).map(c=>c.value);
+}
+
 function send() {
   const orderId = generateOrderId();
   calculateMasterPay();
 
-  function getCheckedList(groupId){
-    const group = document.querySelectorAll(`#${groupId} input[type=checkbox]:checked`);
-    return Array.from(group).map(c=>c.parentNode.innerText);
-  }
-
-  const worksList = [];
-  const windowsList = getCheckedList('windows1side') + getCheckedList('windows2side');
-  const dustList = getCheckedList('dustCeiling') + getCheckedList('dustWalls');
-  const cabinetsList = getCheckedList('cabinetsOutside') + getCheckedList('cabinetsInside');
-  const techList = getCheckedList('oven') + getCheckedList('stove') + getCheckedList('fridge') + getCheckedList('hood') + getCheckedList('microwave') + getCheckedList('kettle') + getCheckedList('coffee') + getCheckedList('dishwasher');
-  const equipmentList = getCheckedList('ladder') + getCheckedList('vacuum') + getCheckedList('steam') + getCheckedList('windowWasher') + getCheckedList('bucket') + getCheckedList('mops') + getCheckedList('mopHolder');
-  const chemList = getCheckedList('universal') + getCheckedList('degreaser') + getCheckedList('scaleRemover') + getCheckedList('sanitaryCleaner') + getCheckedList('constructionCleaner') + getCheckedList('antiscotch');
+  const windows = getCheckedValues('windowsGroup');
+  const dust = getCheckedValues('dustGroup');
+  const cabinets = getCheckedValues('cabinetsGroup');
+  const tech = getCheckedValues('techGroup');
+  const bath = getCheckedValues('bathGroup');
+  const equipment = getCheckedValues('equipmentGroup');
+  const chem = getCheckedValues('chemGroup');
 
   const text = 
 `🧹 ЗАКАЗ НА УБОРКУ №${orderId}
@@ -207,25 +207,25 @@ ${document.getElementById('works').value}
 
 🪟 Мытьё окон:
 Количество створок: ${document.getElementById('windowCount').value}
-${getCheckedList('windows1side').concat(getCheckedList('windows2side')).join('\n')}
+${windows.join('\n')}
 
 🧹 Обеспыливание:
-${getCheckedList('dustCeiling').concat(getCheckedList('dustWalls')).join('\n')}
+${dust.join('\n')}
 
 🚪 Шкафы:
-${getCheckedList('cabinetsOutside').concat(getCheckedList('cabinetsInside')).join('\n')}
+${cabinets.join('\n')}
 
 🔌 Бытовая техника:
-${getCheckedList('oven').concat(getCheckedList('stove')).concat(getCheckedList('fridge')).concat(getCheckedList('hood')).concat(getCheckedList('microwave')).concat(getCheckedList('kettle')).concat(getCheckedList('coffee')).concat(getCheckedList('dishwasher')).join('\n')}
+${tech.join('\n')}
 
 🛁 Ванная комната:
-${getCheckedList('tiles').concat(getCheckedList('sanitary')).concat(getCheckedList('bath')).join('\n')}
+${bath.join('\n')}
 
 🛠 Оборудование:
-${getCheckedList('ladder').concat(getCheckedList('vacuum')).concat(getCheckedList('steam')).concat(getCheckedList('windowWasher')).concat(getCheckedList('bucket')).concat(getCheckedList('mops')).concat(getCheckedList('mopHolder')).join('\n')}
+${equipment.join('\n')}
 
 🧴 Химия:
-${getCheckedList('universal').concat(getCheckedList('degreaser')).concat(getCheckedList('scaleRemover')).concat(getCheckedList('sanitaryCleaner')).concat(getCheckedList('constructionCleaner')).concat(getCheckedList('antiscotch')).join('\n')}
+${chem.join('\n')}
 
 💰 Мастеру: ${document.getElementById('masterPay').value} руб.
 
@@ -239,3 +239,4 @@ ${getCheckedList('universal').concat(getCheckedList('degreaser')).concat(getChec
 
 </body>
 </html>
+ 
