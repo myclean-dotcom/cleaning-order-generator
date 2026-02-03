@@ -17,7 +17,7 @@ textarea { min-height:60px; }
 .checkbox-group { display:flex; flex-direction:column; margin-top:5px; }
 .checkbox-group label { display:flex; flex-direction:column-reverse; font-weight:normal; margin-top:5px; }
 button { margin-top:20px; padding:12px; font-size:16px; cursor:pointer; border:none; background:#2d89ef; color:#fff; border-radius:8px; width:100%; }
-.result { margin-top:20px; background:#f1f1f1; padding:15px; border-radius:8px; white-space:pre-wrap; }
+.result { margin-top:20px; background:#f1f1f1; padding:15px; border-radius:8px; white-space:pre-wrap; font-family: monospace; }
 </style>
 </head>
 <body>
@@ -86,6 +86,10 @@ button { margin-top:20px; padding:12px; font-size:16px; cursor:pointer; border:n
 <div class="label-input"><label>Описание работ</label><textarea id="works"></textarea></div>
 
 <h3>Мытьё окон</h3>
+<div class="label-input">
+  <label>Количество створок</label>
+  <input type="number" id="windowCount" placeholder="Введите количество створок">
+</div>
 <div class="checkbox-group">
   <label><input type="checkbox" id="windows1side"> Только с одной стороны</label>
   <label><input type="checkbox" id="windows2side"> С двух сторон</label>
@@ -174,25 +178,29 @@ function send() {
       .map(c => c.parentNode.innerText).join(', ');
 
   const text = 
-`🧹 ЗАЯВКА №${orderId}
+`🧹 ЗАКАЗ НА УБОРКУ №${orderId}
 
-Тип уборки: ${document.getElementById('type').value}
-Дата/Время: ${document.getElementById('datetime').value}
-Город: ${document.getElementById('city').value}
-Имя заказчика: ${document.getElementById('customerName').value}
+📅 Дата: ${document.getElementById('datetime').value.split('T')[0]}
+⏰ Время: ${document.getElementById('datetime').value.split('T')[1]}
+📏 Площадь: ${document.getElementById('area').value} м²
+🧹 Вид уборки: ${document.getElementById('type').value}
+💰 Сумма: ${document.getElementById('total').value} руб.
+
+👤 КЛИЕНТ:
+Имя: ${document.getElementById('customerName').value}
 Телефон: ${document.getElementById('customerPhone').value}
-Адрес квартиры: ${document.getElementById('customerAddress').value}
+Адрес: ${document.getElementById('customerAddress').value}
 Квартира: ${document.getElementById('customerFlat').value}
-Площадь: ${document.getElementById('area').value} м²
-Сумма: ${document.getElementById('total').value} ₽
-Мастеру: ${document.getElementById('masterPay').value} ₽
 
-Работы: ${document.getElementById('works').value}
+💬 ДОПОЛНИТЕЛЬНО:
+Описание: ${document.getElementById('works').value}
 Выбранные опции: ${checkboxes}
-Дополнительно: ${document.getElementById('extra').value}
+Количество створок: ${document.getElementById('windowCount').value}
+Мастеру: ${document.getElementById('masterPay').value} руб.
 
 📷 Фото прикреплены менеджером в чате
 `;
+
   document.getElementById('out').innerText = text;
   window.open('https://t.me/share/url?text='+encodeURIComponent(text));
 }
