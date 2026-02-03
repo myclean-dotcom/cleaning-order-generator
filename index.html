@@ -5,8 +5,9 @@
 <title>Форма заявки клининг</title>
 <style>
 body { font-family: Arial, sans-serif; background:#f4f6f9; padding:20px; }
-.container { max-width:900px; margin:auto; background:#fff; padding:20px; border-radius:12px; }
-h1 { text-align:center; }
+.container { max-width:900px; margin:auto; background:#fff; padding:20px; border-radius:12px; box-shadow:0 0 10px rgba(0,0,0,0.1);}
+h1, h2 { text-align:center; margin-top:0; }
+h2 { background:#2d89ef; color:#fff; padding:8px; border-radius:5px; margin-top:20px; }
 label { display:block; margin-top:10px; font-weight:bold; }
 input, select, textarea { width:100%; padding:8px; margin-top:5px; border-radius:5px; border:1px solid #ccc; }
 textarea { min-height:60px; }
@@ -14,8 +15,9 @@ textarea { min-height:60px; }
 .checkbox-group label { font-weight:normal; margin-top:3px; }
 .inline { display:flex; gap:10px; }
 .inline > div { flex:1; }
-button { margin-top:20px; padding:12px; font-size:16px; cursor:pointer; border:none; background:#2d89ef; color:#fff; border-radius:8px; }
+button { margin-top:20px; padding:12px; font-size:16px; cursor:pointer; border:none; background:#2d89ef; color:#fff; border-radius:8px; width:100%; }
 .result { margin-top:20px; background:#f1f1f1; padding:15px; border-radius:8px; white-space:pre-wrap; }
+.section { border:1px solid #ccc; padding:15px; border-radius:8px; margin-top:10px; background:#fafafa;}
 </style>
 </head>
 <body>
@@ -23,6 +25,9 @@ button { margin-top:20px; padding:12px; font-size:16px; cursor:pointer; border:n
 <div class="container">
 <h1>🧹 Создание заявки</h1>
 
+<!-- Основные данные -->
+<div class="section">
+<h2>Основные данные</h2>
 <label>Тип уборки</label>
 <select id="type">
   <option>Поддерживающая</option>
@@ -47,15 +52,28 @@ button { margin-top:20px; padding:12px; font-size:16px; cursor:pointer; border:n
   <option>Новосибирск</option>
 </select>
 
-<label>Адрес</label>
+<label>Адрес объекта</label>
 <input id="address">
+</div>
 
-<label>Данные заказчика</label>
-<input id="customer">
+<!-- Данные заказчика -->
+<div class="section">
+<h2>Данные заказчика</h2>
+<label>Имя заказчика</label>
+<input id="customerName">
+<label>Телефон</label>
+<input id="customerPhone">
+<label>Адрес квартиры</label>
+<input id="customerAddress">
+<label>Номер квартиры</label>
+<input id="customerFlat">
+</div>
 
+<!-- Финансы -->
+<div class="section">
+<h2>Финансы</h2>
 <label>Сумма заказа (₽)</label>
 <input type="number" id="total">
-
 <label>Зарплата мастерам</label>
 <select id="masterPayType" onchange="calculateMasterPay()">
   <option value="60">60/40</option>
@@ -63,29 +81,33 @@ button { margin-top:20px; padding:12px; font-size:16px; cursor:pointer; border:n
   <option value="fixed">Фиксированная</option>
 </select>
 <input type="number" id="masterPay" placeholder="Введите сумму, если фикс">
+</div>
 
+<!-- Описание работ -->
+<div class="section">
+<h2>Описание работ</h2>
 <label>Описание работ</label>
 <textarea id="works"></textarea>
 
-<label>Мытьё окон</label>
+<h3>Мытьё окон</h3>
 <div class="checkbox-group">
   <label><input type="checkbox" id="windows1side"> Только с одной стороны</label>
   <label><input type="checkbox" id="windows2side"> С двух сторон</label>
 </div>
 
-<label>Обеспыливание</label>
+<h3>Обеспыливание</h3>
 <div class="checkbox-group">
   <label><input type="checkbox" id="dustCeiling"> Потолок</label>
   <label><input type="checkbox" id="dustWalls"> Стены</label>
 </div>
 
-<label>Мытьё шкафов</label>
+<h3>Мытьё шкафов</h3>
 <div class="checkbox-group">
   <label><input type="checkbox" id="cabinetsOutside"> Снаружи</label>
   <label><input type="checkbox" id="cabinetsInside"> Снаружи и внутри</label>
 </div>
 
-<label>Мытьё бытовой техники</label>
+<h3>Мытьё бытовой техники</h3>
 <div class="checkbox-group">
   <label><input type="checkbox" id="oven"> Духовой шкаф</label>
   <label><input type="checkbox" id="stove"> Плита</label>
@@ -97,14 +119,17 @@ button { margin-top:20px; padding:12px; font-size:16px; cursor:pointer; border:n
   <label><input type="checkbox" id="dishwasher"> Посудомойка</label>
 </div>
 
-<label>Ванная комната</label>
+<h3>Ванная комната</h3>
 <div class="checkbox-group">
   <label><input type="checkbox" id="tiles"> Мытьё кафеля</label>
   <label><input type="checkbox" id="sanitary"> Сантехника</label>
   <label><input type="checkbox" id="bath"> Душевая/ванна</label>
 </div>
+</div>
 
-<label>Оборудование</label>
+<!-- Оборудование -->
+<div class="section">
+<h2>Оборудование</h2>
 <div class="checkbox-group">
   <label><input type="checkbox" id="ladder"> Стремянка</label>
   <label><input type="checkbox" id="vacuum"> Пылесос</label>
@@ -114,8 +139,11 @@ button { margin-top:20px; padding:12px; font-size:16px; cursor:pointer; border:n
   <label><input type="checkbox" id="mops"> Мопы</label>
   <label><input type="checkbox" id="mopHolder"> Держатель мопов</label>
 </div>
+</div>
 
-<label>Химия</label>
+<!-- Химия -->
+<div class="section">
+<h2>Химия</h2>
 <div class="checkbox-group">
   <label><input type="checkbox" id="universal"> Универсальное моющее средство</label>
   <label><input type="checkbox" id="degreaser"> Средство для удаления жира</label>
@@ -124,12 +152,11 @@ button { margin-top:20px; padding:12px; font-size:16px; cursor:pointer; border:n
   <label><input type="checkbox" id="constructionCleaner"> Средство для удаления строительных загрязнений</label>
   <label><input type="checkbox" id="antiscotch"> Антискотч</label>
 </div>
-
 <label>Дополнительные пожелания</label>
 <textarea id="extra"></textarea>
+</div>
 
 <button onclick="send()">📨 Отправить заявку в Telegram</button>
-
 <div id="out" class="result"></div>
 </div>
 
@@ -138,8 +165,8 @@ function calculateMasterPay() {
   const total = parseFloat(document.getElementById('total').value) || 0;
   const type = document.getElementById('masterPayType').value;
   const masterInput = document.getElementById('masterPay');
-  if(type === '60') masterInput.value = Math.round(total*0.6);
-  else if(type === '70') masterInput.value = Math.round(total*0.7);
+  if(type==='60') masterInput.value = Math.round(total*0.6);
+  else if(type==='70') masterInput.value = Math.round(total*0.7);
   else masterInput.value = '';
 }
 
@@ -151,22 +178,26 @@ function send() {
   const orderId = generateOrderId();
   calculateMasterPay();
 
-  const selectedCheckboxes = Array.from(document.querySelectorAll('.checkbox-group input[type=checkbox]:checked'))
+  const checkboxes = Array.from(document.querySelectorAll('.checkbox-group input[type=checkbox]:checked'))
     .map(c => c.parentNode.innerText).join(', ');
 
   const text = 
 `🧹 ЗАЯВКА №${orderId}
+
 Тип уборки: ${document.getElementById('type').value}
 Дата/Время: ${document.getElementById('datetime').value}
 Город: ${document.getElementById('city').value}
 Адрес: ${document.getElementById('address').value}
-Данные заказчика: ${document.getElementById('customer').value}
+Имя заказчика: ${document.getElementById('customerName').value}
+Телефон: ${document.getElementById('customerPhone').value}
+Адрес квартиры: ${document.getElementById('customerAddress').value}
+Квартира: ${document.getElementById('customerFlat').value}
 Площадь: ${document.getElementById('area').value} м²
 Сумма: ${document.getElementById('total').value} ₽
 Мастеру: ${document.getElementById('masterPay').value} ₽
 
 Работы: ${document.getElementById('works').value}
-Выбранные опции: ${selectedCheckboxes}
+Выбранные опции: ${checkboxes}
 Дополнительно: ${document.getElementById('extra').value}
 
 📷 Фото прикреплены менеджером в чате
