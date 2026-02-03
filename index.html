@@ -6,18 +6,18 @@
 <style>
 body { font-family: Arial, sans-serif; background:#f4f6f9; padding:20px; }
 .container { max-width:900px; margin:auto; background:#fff; padding:20px; border-radius:12px; box-shadow:0 0 10px rgba(0,0,0,0.1);}
-h1, h2 { text-align:center; margin-top:0; }
-h2 { background:#2d89ef; color:#fff; padding:8px; border-radius:5px; margin-top:20px; }
-label { display:block; margin-top:10px; font-weight:bold; }
-input, select, textarea { width:100%; padding:8px; margin-top:5px; border-radius:5px; border:1px solid #ccc; }
+h1,h2,h3 { margin-top:0; text-align:center; }
+h2 { background:#2d89ef; color:#fff; padding:6px; border-radius:5px; margin-top:20px; }
+.section { border:1px solid #ccc; padding:15px; border-radius:8px; margin-top:15px; background:#fafafa;}
+.label-input { display:flex; flex-direction:column; margin-top:10px; }
+input, select, textarea { padding:8px; border-radius:5px; border:1px solid #ccc; width:100%; box-sizing:border-box; }
 textarea { min-height:60px; }
-.checkbox-group { display:flex; flex-direction:column; margin-top:5px; }
-.checkbox-group label { font-weight:normal; margin-top:3px; }
 .inline { display:flex; gap:10px; }
-.inline > div { flex:1; }
+.inline > div { flex:1; display:flex; flex-direction:column; }
+.checkbox-group { display:flex; flex-direction:column; margin-top:5px; }
+.checkbox-group label { display:flex; flex-direction:column-reverse; font-weight:normal; margin-top:5px; }
 button { margin-top:20px; padding:12px; font-size:16px; cursor:pointer; border:none; background:#2d89ef; color:#fff; border-radius:8px; width:100%; }
 .result { margin-top:20px; background:#f1f1f1; padding:15px; border-radius:8px; white-space:pre-wrap; }
-.section { border:1px solid #ccc; padding:15px; border-radius:8px; margin-top:10px; background:#fafafa;}
 </style>
 </head>
 <body>
@@ -28,6 +28,7 @@ button { margin-top:20px; padding:12px; font-size:16px; cursor:pointer; border:n
 <!-- Основные данные -->
 <div class="section">
 <h2>Основные данные</h2>
+<div class="label-input">
 <label>Тип уборки</label>
 <select id="type">
   <option>Поддерживающая</option>
@@ -35,46 +36,46 @@ button { margin-top:20px; padding:12px; font-size:16px; cursor:pointer; border:n
   <option>После ремонта</option>
   <option>Химчистка</option>
 </select>
+</div>
 
 <div class="inline">
-  <div>
+  <div class="label-input">
     <label>Дата и время</label>
     <input type="datetime-local" id="datetime">
   </div>
-  <div>
+  <div class="label-input">
     <label>Площадь (м²)</label>
     <input type="number" id="area">
   </div>
 </div>
 
+<div class="label-input">
 <label>Город</label>
 <select id="city">
   <option>Новосибирск</option>
 </select>
+</div>
 
+<div class="label-input">
 <label>Адрес объекта</label>
 <input id="address">
+</div>
 </div>
 
 <!-- Данные заказчика -->
 <div class="section">
 <h2>Данные заказчика</h2>
-<label>Имя заказчика</label>
-<input id="customerName">
-<label>Телефон</label>
-<input id="customerPhone">
-<label>Адрес квартиры</label>
-<input id="customerAddress">
-<label>Номер квартиры</label>
-<input id="customerFlat">
+<div class="label-input"><label>Имя заказчика</label><input id="customerName"></div>
+<div class="label-input"><label>Телефон</label><input id="customerPhone"></div>
+<div class="label-input"><label>Адрес квартиры</label><input id="customerAddress"></div>
+<div class="label-input"><label>Номер квартиры</label><input id="customerFlat"></div>
 </div>
 
 <!-- Финансы -->
 <div class="section">
 <h2>Финансы</h2>
-<label>Сумма заказа (₽)</label>
-<input type="number" id="total">
-<label>Зарплата мастерам</label>
+<div class="label-input"><label>Сумма заказа (₽)</label><input type="number" id="total"></div>
+<div class="label-input"><label>Зарплата мастерам</label>
 <select id="masterPayType" onchange="calculateMasterPay()">
   <option value="60">60/40</option>
   <option value="70">70/30</option>
@@ -82,12 +83,12 @@ button { margin-top:20px; padding:12px; font-size:16px; cursor:pointer; border:n
 </select>
 <input type="number" id="masterPay" placeholder="Введите сумму, если фикс">
 </div>
+</div>
 
 <!-- Описание работ -->
 <div class="section">
 <h2>Описание работ</h2>
-<label>Описание работ</label>
-<textarea id="works"></textarea>
+<div class="label-input"><label>Описание работ</label><textarea id="works"></textarea></div>
 
 <h3>Мытьё окон</h3>
 <div class="checkbox-group">
@@ -152,34 +153,30 @@ button { margin-top:20px; padding:12px; font-size:16px; cursor:pointer; border:n
   <label><input type="checkbox" id="constructionCleaner"> Средство для удаления строительных загрязнений</label>
   <label><input type="checkbox" id="antiscotch"> Антискотч</label>
 </div>
-<label>Дополнительные пожелания</label>
-<textarea id="extra"></textarea>
+<div class="label-input"><label>Дополнительные пожелания</label><textarea id="extra"></textarea></div>
 </div>
 
 <button onclick="send()">📨 Отправить заявку в Telegram</button>
 <div id="out" class="result"></div>
-</div>
 
 <script>
 function calculateMasterPay() {
-  const total = parseFloat(document.getElementById('total').value) || 0;
+  const total = parseFloat(document.getElementById('total').value)||0;
   const type = document.getElementById('masterPayType').value;
   const masterInput = document.getElementById('masterPay');
-  if(type==='60') masterInput.value = Math.round(total*0.6);
-  else if(type==='70') masterInput.value = Math.round(total*0.7);
-  else masterInput.value = '';
+  if(type==='60') masterInput.value=Math.round(total*0.6);
+  else if(type==='70') masterInput.value=Math.round(total*0.7);
+  else masterInput.value='';
 }
 
-function generateOrderId() {
-  return 'CLN-' + Date.now().toString().slice(-6);
-}
+function generateOrderId() { return 'CLN-'+Date.now().toString().slice(-6); }
 
 function send() {
   const orderId = generateOrderId();
   calculateMasterPay();
 
   const checkboxes = Array.from(document.querySelectorAll('.checkbox-group input[type=checkbox]:checked'))
-    .map(c => c.parentNode.innerText).join(', ');
+      .map(c => c.parentNode.innerText).join(', ');
 
   const text = 
 `🧹 ЗАЯВКА №${orderId}
@@ -187,7 +184,7 @@ function send() {
 Тип уборки: ${document.getElementById('type').value}
 Дата/Время: ${document.getElementById('datetime').value}
 Город: ${document.getElementById('city').value}
-Адрес: ${document.getElementById('address').value}
+Адрес объекта: ${document.getElementById('address').value}
 Имя заказчика: ${document.getElementById('customerName').value}
 Телефон: ${document.getElementById('customerPhone').value}
 Адрес квартиры: ${document.getElementById('customerAddress').value}
@@ -202,9 +199,8 @@ function send() {
 
 📷 Фото прикреплены менеджером в чате
 `;
-
   document.getElementById('out').innerText = text;
-  window.open('https://t.me/share/url?text=' + encodeURIComponent(text));
+  window.open('https://t.me/share/url?text='+encodeURIComponent(text));
 }
 </script>
 
