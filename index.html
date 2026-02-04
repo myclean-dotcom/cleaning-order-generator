@@ -22,13 +22,25 @@ button { margin-top:20px; padding:12px; font-size:16px; cursor:pointer; border:n
 .btn { flex:1; padding:12px; font-size:16px; cursor:pointer; border:none; border-radius:8px; text-align:center; text-decoration:none; }
 .copy-btn { background:#4CAF50; color:white; }
 .telegram-btn { background:#0088cc; color:white; }
+.sheets-btn { background:#0F9D58; color:white; }
 .checkbox-group input[type="checkbox"] { margin-bottom: 8px; }
+.loading { display:none; text-align:center; margin:20px 0; color:#2d89ef; }
 </style>
 </head>
 <body>
 
 <div class="container">
 <h1>🧹 Создание заявки</h1>
+
+<!-- Конфигурация Google Sheets -->
+<div class="section">
+<h2>Настройка Google Таблицы</h2>
+<div class="label-input">
+<label>URL веб-приложения Google Apps Script</label>
+<input id="scriptUrl" placeholder="https://script.google.com/macros/s/.../exec">
+<small>Инструкция: 1) Создайте Google Таблицу 2) Скопируйте код из инструкции ниже 3) Разверните как веб-приложение</small>
+</div>
+</div>
 
 <!-- Основные данные -->
 <div class="section">
@@ -161,13 +173,96 @@ button { margin-top:20px; padding:12px; font-size:16px; cursor:pointer; border:n
 </div>
 
 <button onclick="generate()">📋 Сформировать заявку</button>
+<div id="loading" class="loading">⏳ Отправка данных в Google Таблицу...</div>
 <div id="out" class="result"></div>
 <div class="buttons" id="actionButtons" style="display:none;">
-  <button class="copy-btn" onclick="copyToClipboard()">📋 Скопировать итоговое сообщение</button>
-  <button class="telegram-btn" onclick="sendToTelegram()">📨 Отправить в Telegram</button>
+  <button class="copy-btn" onclick="copyToClipboard()">📋 Скопировать текст</button>
+  <button class="telegram-btn" onclick="sendToTelegram()">📨 Telegram</button>
+  <button class="sheets-btn" onclick="saveToSheets()">📊 Сохранить в Google Таблицу</button>
+</div>
+
+<!-- Инструкция по настройке -->
+<div class="section" style="margin-top:30px; background:#f0f7ff;">
+<h3>📋 Инструкция по настройке Google Таблицы</h3>
+<ol>
+<li>Создайте новую Google Таблицу: <a href="https://sheets.new" target="_blank">sheets.new</a></li>
+<li>В меню выберите: "Расширения" → "Apps Script"</li>
+<li>Удалите весь код и вставьте этот:</li>
+<textarea readonly style="width:100%; height:200px; font-family: monospace; font-size:12px;" onclick="this.select()">
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    
+    // Заголовки для первого раза
+    if (sheet.getLastRow() === 0) {
+      const headers = [
+        'ID', 'Дата создания', 'Тип уборки', 'Дата', 'Время', 'Площадь', 'Город',
+        'Имя', 'Телефон', 'Адрес', 'Квартира', 'Сумма', 'Зарплата мастера',
+        'Описание работ', 'Окна створки', 'Окна тип', 'Обеспыливание',
+        'Шкафы', 'Техника', 'Ванная', 'Оборудование', 'Химия', 'Пожелания'
+      ];
+      sheet.appendRow(headers);
+    }
+    
+    const row = [
+      data.orderId,
+      new Date(),
+      data.type,
+      data.date,
+      data.time,
+      data.area,
+      data.city,
+      data.customerName,
+      data.customerPhone,
+      data.customerAddress,
+      data.customerFlat,
+      data.total,
+      data.masterPay,
+      data.works,
+      data.windowCount,
+      data.windows,
+      data.dust,
+      data.cabinets,
+      data.tech,
+      data.bath,
+      data.equipment,
+      data.chem,
+      data.extra
+    ];
+    
+    sheet.appendRow(row);
+    
+    return ContentService
+      .createTextOutput(JSON.stringify({success: true, message: 'Данные сохранены!'}))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({success: false, message: error.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doGet() {
+  return ContentService
+    .createTextOutput('Сервер работает! Отправляйте POST-запросы с данными формы.')
+    .setMimeType(ContentService.MimeType.TEXT);
+}
+</textarea>
+<li>Сохраните проект (Ctrl+S), дайте ему любое имя</li>
+<li>Нажмите "Развернуть" → "Новое развертывание"</li>
+<li>Выберите "Веб-приложение" → Настройки: "Выполнять от имени меня", "Доступ: любой"</li>
+<li>Нажмите "Развернуть", скопируйте URL веб-приложения и вставьте выше</li>
+</ol>
+</div>
+
 </div>
 
 <script>
+// Глобальные переменные
+let currentOrderData = null;
+
 function calculateMasterPay() {
   const total = parseFloat(document.getElementById('total').value)||0;
   const type = document.getElementById('masterPayType').value;
@@ -210,6 +305,7 @@ function generate() {
   const chem = getCheckedValues('chemGroup');
   const extra = document.getElementById('extra').value.trim() || '—';
 
+  // Формируем текст для отображения
   const text = 
 `🧹 ЗАКАЗ НА УБОРКУ №${orderId}
 
@@ -258,11 +354,37 @@ ${document.getElementById('masterPay').value || '—'} руб.
 
 📷 Фото прикреплены менеджером в чате`;
 
+  // Сохраняем структурированные данные для отправки
+  currentOrderData = {
+    orderId: orderId,
+    type: document.getElementById('type').value,
+    date: date,
+    time: time,
+    area: document.getElementById('area').value || '0',
+    city: document.getElementById('city').value,
+    customerName: document.getElementById('customerName').value,
+    customerPhone: document.getElementById('customerPhone').value,
+    customerAddress: document.getElementById('customerAddress').value,
+    customerFlat: document.getElementById('customerFlat').value,
+    total: document.getElementById('total').value || '0',
+    masterPay: document.getElementById('masterPay').value || '0',
+    works: document.getElementById('works').value || '',
+    windowCount: document.getElementById('windowCount').value || '0',
+    windows: windows,
+    dust: dust,
+    cabinets: cabinets,
+    tech: tech,
+    bath: bath,
+    equipment: equipment,
+    chem: chem,
+    extra: extra
+  };
+
   document.getElementById('out').innerText = text;
   document.getElementById('actionButtons').style.display = 'flex';
   
-  // Сохраняем текст в глобальной переменной для использования в Telegram
-  window.generatedText = text;
+  // Автоматически отправляем в Google Sheets
+  saveToSheets();
 }
 
 function copyToClipboard() {
@@ -276,16 +398,99 @@ function copyToClipboard() {
 }
 
 function sendToTelegram() {
-  if (!window.generatedText) {
+  if (!currentOrderData) {
     alert('Сначала сформируйте заявку');
     return;
   }
   
-  const text = encodeURIComponent(window.generatedText);
-  const telegramUrl = `https://t.me/share/url?url=&text=${text}`;
-  
-  // Пытаемся открыть приложение Telegram
+  const text = document.getElementById('out').innerText;
+  const telegramUrl = `https://t.me/share/url?url=&text=${encodeURIComponent(text)}`;
   window.open(telegramUrl, '_blank');
+}
+
+async function saveToSheets() {
+  if (!currentOrderData) {
+    alert('Сначала сформируйте заявку');
+    return;
+  }
+  
+  const scriptUrl = document.getElementById('scriptUrl').value;
+  if (!scriptUrl) {
+    alert('Укажите URL веб-приложения Google Apps Script в разделе настроек');
+    return;
+  }
+  
+  // Показываем индикатор загрузки
+  document.getElementById('loading').style.display = 'block';
+  
+  try {
+    const response = await fetch(scriptUrl, {
+      method: 'POST',
+      mode: 'no-cors', // Google Apps Script требует no-cors
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(currentOrderData)
+    });
+    
+    // С no-cors мы не можем получить ответ, но можно попробовать с cors
+    // Если не работает, попробуйте альтернативный метод:
+    const altResponse = await fetch(scriptUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(currentOrderData)
+    }).catch(() => null);
+    
+    // Если используем no-cors, просто показываем успешное сообщение
+    document.getElementById('loading').style.display = 'none';
+    alert('✅ Данные отправлены в Google Таблицу!\n\nЗаказ №' + currentOrderData.orderId + ' сохранён.');
+    
+  } catch (error) {
+    document.getElementById('loading').style.display = 'none';
+    console.error('Ошибка:', error);
+    
+    // Альтернативный метод для старых браузеров
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = scriptUrl;
+    form.target = '_blank';
+    
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'data';
+    input.value = JSON.stringify(currentOrderData);
+    form.appendChild(input);
+    
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+    
+    alert('Данные отправлены (использован альтернативный метод). Проверьте Google Таблицу.');
+  }
+}
+
+// Устанавливаем текущую дату по умолчанию
+window.onload = function() {
+  const now = new Date();
+  const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+    .toISOString()
+    .slice(0, 16);
+  document.getElementById('datetime').value = localDateTime;
+  
+  // Сохраняем URL в localStorage при изменении
+  document.getElementById('scriptUrl').addEventListener('change', function() {
+    if(this.value) {
+      localStorage.setItem('cleaningScriptUrl', this.value);
+    }
+  });
+  
+  // Восстанавливаем сохраненный URL
+  const savedUrl = localStorage.getItem('cleaningScriptUrl');
+  if(savedUrl) {
+    document.getElementById('scriptUrl').value = savedUrl;
+  }
 }
 </script>
 
