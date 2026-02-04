@@ -268,6 +268,7 @@ ${formatLine('⏰ Время:', time)}
 ${formatLine('📏 Площадь:', document.getElementById('area').value + ' м²')}
 ${formatLine('🧹 Вид уборки:', document.getElementById('type').value)}
 ${formatLine('💰 Сумма:', document.getElementById('total').value + ' руб.')}
+${formatLine('💰 Мастеру:', document.getElementById('masterPay').value || '—' + ' руб.')}
 
 👤 КЛИЕНТ:
 ${formatLine('Имя:', document.getElementById('customerName').value || '—')}
@@ -302,9 +303,6 @@ ${chem}
 
 📝 ДОПОЛНИТЕЛЬНЫЕ ПОЖЕЛАНИЯ:
 ${extra}
-
-💰 МАСТЕРУ:
-${document.getElementById('masterPay').value || '—'} руб.
 
 📷 Фото прикреплены менеджером в чате`;
 
