@@ -3,116 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <title>Форма заявки клининг</title>
-
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background:#f4f6f9;
-  padding:20px;
-}
-
-.container {
-  max-width:900px;
-  margin:auto;
-  background:#fff;
-  padding:20px;
-  border-radius:12px;
-  box-shadow:0 0 10px rgba(0,0,0,0.1);
-}
-
-h1,h2,h3 {
-  margin-top:0;
-  text-align:center;
-}
-
-h2 {
-  background:#2d89ef;
-  color:#fff;
-  padding:6px;
-  border-radius:5px;
-  margin-top:20px;
-}
-
-.section {
-  border:1px solid #ccc;
-  padding:15px;
-  border-radius:8px;
-  margin-top:15px;
-  background:#fafafa;
-}
-
-.label-input {
-  display:flex;
-  flex-direction:column;
-  margin-top:10px;
-}
-
-input, select, textarea {
-  padding:8px;
-  border-radius:5px;
-  border:1px solid #ccc;
-  width:100%;
-  box-sizing:border-box;
-  height:38px;
-  font-size:14px;
-}
-
-textarea {
-  min-height:60px;
-  height:auto;
-}
-
-.inline {
-  display:flex;
-  gap:10px;
-}
-
-.inline > div {
-  flex:1;
-  display:flex;
-  flex-direction:column;
-}
-
-.checkbox-group {
-  display:flex;
-  flex-direction:column;
-  margin-top:5px;
-}
-
-.checkbox-group label {
-  font-weight:normal;
-  margin-top:5px;
-}
-
-button {
-  margin-top:15px;
-  padding:12px;
-  font-size:16px;
-  cursor:pointer;
-  border:none;
-  background:#2d89ef;
-  color:#fff;
-  border-radius:8px;
-  width:100%;
-}
-
-.copy-btn {
-  background:#4CAF50;
-}
-
-.result {
-  margin-top:20px;
-  background:#f1f1f1;
-  padding:15px;
-  border-radius:8px;
-  white-space:pre-wrap;
-  font-family: monospace;
-  font-size:14px;
-  line-height:1.4;
-}
+body { font-family: Arial, sans-serif; background:#f4f6f9; padding:20px; }
+.container { max-width:900px; margin:auto; background:#fff; padding:20px; border-radius:12px; box-shadow:0 0 10px rgba(0,0,0,0.1);}
+h1,h2,h3 { margin-top:0; text-align:center; }
+h2 { background:#2d89ef; color:#fff; padding:6px; border-radius:5px; margin-top:20px; }
+.section { border:1px solid #ccc; padding:15px; border-radius:8px; margin-top:15px; background:#fafafa;}
+.label-input { display:flex; flex-direction:column; margin-top:10px; }
+input, select, textarea { padding:8px; border-radius:5px; border:1px solid #ccc; width:100%; box-sizing:border-box; height:38px; }
+textarea { min-height:60px; }
+.inline { display:flex; gap:10px; }
+.inline > div { flex:1; display:flex; flex-direction:column; }
+.checkbox-group { display:flex; flex-direction:column; margin-top:5px; }
+.checkbox-group label { display:flex; flex-direction:column-reverse; font-weight:normal; margin-top:5px; }
+button { margin-top:20px; padding:12px; font-size:16px; cursor:pointer; border:none; background:#2d89ef; color:#fff; border-radius:8px; width:100%; }
+.result { margin-top:20px; background:#f1f1f1; padding:15px; border-radius:8px; white-space:pre-wrap; font-family: monospace; line-height: 1.5; }
+.buttons { display:flex; gap:10px; margin-top:20px; }
+.btn { flex:1; padding:12px; font-size:16px; cursor:pointer; border:none; border-radius:8px; text-align:center; text-decoration:none; }
+.copy-btn { background:#4CAF50; color:white; }
+.telegram-btn { background:#0088cc; color:white; }
+.checkbox-group input[type="checkbox"] { margin-bottom: 8px; }
 </style>
 </head>
-
 <body>
 
 <div class="container">
@@ -121,7 +33,6 @@ button {
 <!-- Основные данные -->
 <div class="section">
 <h2>Основные данные</h2>
-
 <div class="label-input">
 <label>Тип уборки</label>
 <select id="type">
@@ -142,106 +53,239 @@ button {
     <input type="number" id="area">
   </div>
 </div>
+
+<div class="label-input">
+<label>Город</label>
+<select id="city">
+  <option>Новосибирск</option>
+</select>
+</div>
 </div>
 
-<!-- Заказчик -->
+<!-- Данные заказчика -->
 <div class="section">
 <h2>Данные заказчика</h2>
-<div class="label-input"><label>Имя</label><input id="customerName"></div>
+<div class="label-input"><label>Имя заказчика</label><input id="customerName"></div>
 <div class="label-input"><label>Телефон</label><input id="customerPhone"></div>
-<div class="label-input"><label>Адрес</label><input id="customerAddress"></div>
-<div class="label-input"><label>Квартира</label><input id="customerFlat"></div>
+<div class="label-input"><label>Адрес квартиры</label><input id="customerAddress"></div>
+<div class="label-input"><label>Номер квартиры</label><input id="customerFlat"></div>
 </div>
 
 <!-- Финансы -->
 <div class="section">
 <h2>Финансы</h2>
-<div class="label-input"><label>Сумма заказа</label><input type="number" id="total"></div>
-
-<div class="label-input">
-<label>Зарплата мастерам</label>
+<div class="label-input"><label>Сумма заказа (₽)</label><input type="number" id="total"></div>
+<div class="label-input"><label>Зарплата мастерам</label>
 <select id="masterPayType" onchange="calculateMasterPay()">
   <option value="60">60/40</option>
   <option value="70">70/30</option>
   <option value="fixed">Фиксированная</option>
 </select>
-<input type="number" id="masterPay" placeholder="Сумма мастеру">
+<input type="number" id="masterPay" placeholder="Введите сумму, если фикс">
 </div>
 </div>
 
-<!-- Работы -->
+<!-- Описание работ -->
 <div class="section">
 <h2>Описание работ</h2>
-<textarea id="works"></textarea>
+<div class="label-input"><label>Описание работ</label><textarea id="works"></textarea></div>
 
 <h3>Мытьё окон</h3>
-<input type="number" id="windowCount" placeholder="Количество створок">
+<div class="label-input">
+  <label>Количество створок</label>
+  <input type="number" id="windowCount" placeholder="Введите количество створок">
+</div>
 <div class="checkbox-group" id="windowsGroup">
-  <label><input type="checkbox" value="Одна сторона"> Одна сторона</label>
+  <label><input type="checkbox" value="Только с одной стороны"> Только с одной стороны</label>
   <label><input type="checkbox" value="С двух сторон"> С двух сторон</label>
 </div>
 
-<h3>Дополнительные пожелания</h3>
-<textarea id="extra"></textarea>
+<h3>Обеспыливание</h3>
+<div class="checkbox-group" id="dustGroup">
+  <label><input type="checkbox" value="Потолок"> Потолок</label>
+  <label><input type="checkbox" value="Стены"> Стены</label>
 </div>
 
-<button onclick="send()">📨 Отправить в Telegram</button>
-<button class="copy-btn" onclick="copyResult()">📋 Скопировать сообщение</button>
+<h3>Мытьё шкафов</h3>
+<div class="checkbox-group" id="cabinetsGroup">
+  <label><input type="checkbox" value="Снаружи"> Снаружи</label>
+  <label><input type="checkbox" value="Снаружи и внутри"> Снаружи и внутри</label>
+</div>
 
+<h3>Мытьё бытовой техники</h3>
+<div class="checkbox-group" id="techGroup">
+  <label><input type="checkbox" value="Духовой шкаф"> Духовой шкаф</label>
+  <label><input type="checkbox" value="Плита"> Плита</label>
+  <label><input type="checkbox" value="Холодильник"> Холодильник</label>
+  <label><input type="checkbox" value="Вытяжка"> Вытяжка</label>
+  <label><input type="checkbox" value="Микроволновка"> Микроволновка</label>
+  <label><input type="checkbox" value="Чайник"> Чайник</label>
+  <label><input type="checkbox" value="Кофемашина"> Кофемашина</label>
+  <label><input type="checkbox" value="Посудомойка"> Посудомойка</label>
+</div>
+
+<h3>Ванная комната</h3>
+<div class="checkbox-group" id="bathGroup">
+  <label><input type="checkbox" value="Мытьё кафеля"> Мытьё кафеля</label>
+  <label><input type="checkbox" value="Сантехника"> Сантехника</label>
+  <label><input type="checkbox" value="Душевая/ванна"> Душевая/ванна</label>
+</div>
+</div>
+
+<!-- Оборудование -->
+<div class="section">
+<h2>Оборудование</h2>
+<div class="checkbox-group" id="equipmentGroup">
+  <label><input type="checkbox" value="Стремянка"> Стремянка</label>
+  <label><input type="checkbox" value="Пылесос"> Пылесос</label>
+  <label><input type="checkbox" value="Парогенератор"> Парогенератор</label>
+  <label><input type="checkbox" value="Мойщик окон"> Мойщик окон</label>
+  <label><input type="checkbox" value="Ведро"> Ведро</label>
+  <label><input type="checkbox" value="Мопы"> Мопы</label>
+  <label><input type="checkbox" value="Держатель мопов"> Держатель мопов</label>
+</div>
+</div>
+
+<!-- Химия -->
+<div class="section">
+<h2>Химия</h2>
+<div class="checkbox-group" id="chemGroup">
+  <label><input type="checkbox" value="Универсальное моющее средство"> Универсальное моющее средство</label>
+  <label><input type="checkbox" value="Средство для удаления жира"> Средство для удаления жира</label>
+  <label><input type="checkbox" value="Средство для удаления налёта"> Средство для удаления налёта</label>
+  <label><input type="checkbox" value="Средство для сантехники"> Средство для сантехники</label>
+  <label><input type="checkbox" value="Средство для удаления строительных загрязнений"> Средство для удаления строительных загрязнений</label>
+  <label><input type="checkbox" value="Антискотч"> Антискотч</label>
+</div>
+<div class="label-input"><label>Дополнительные пожелания</label><textarea id="extra"></textarea></div>
+</div>
+
+<button onclick="generate()">📋 Сформировать заявку</button>
 <div id="out" class="result"></div>
+<div class="buttons" id="actionButtons" style="display:none;">
+  <button class="copy-btn" onclick="copyToClipboard()">📋 Скопировать итоговое сообщение</button>
+  <button class="telegram-btn" onclick="sendToTelegram()">📨 Отправить в Telegram</button>
 </div>
 
 <script>
 function calculateMasterPay() {
-  const total = +document.getElementById('total').value || 0;
+  const total = parseFloat(document.getElementById('total').value)||0;
   const type = document.getElementById('masterPayType').value;
-  const pay = document.getElementById('masterPay');
-
-  if (type === '60') pay.value = Math.round(total * 0.6);
-  else if (type === '70') pay.value = Math.round(total * 0.7);
+  const masterInput = document.getElementById('masterPay');
+  if(type==='60') masterInput.value=Math.round(total*0.6);
+  else if(type==='70') masterInput.value=Math.round(total*0.7);
+  else masterInput.value='';
 }
 
-function getCheckedValues(id) {
-  return [...document.querySelectorAll(`#${id} input:checked`)].map(i => i.value);
+function generateOrderId() { 
+  return 'CLN-' + Date.now().toString().slice(-6);
 }
 
-function send() {
+function getCheckedValues(groupId){
+  const group = document.querySelectorAll(`#${groupId} input[type=checkbox]:checked`);
+  const values = Array.from(group).map(c => c.value);
+  return values.length > 0 ? values.join(', ') : '—';
+}
+
+function formatLine(label, value) {
+  const maxLabelLength = 25;
+  const paddedLabel = label.padEnd(maxLabelLength, ' ');
+  return `${paddedLabel} ${value}`;
+}
+
+function generate() {
+  const orderId = generateOrderId();
   calculateMasterPay();
-
+  
+  const datetime = document.getElementById('datetime').value;
+  const date = datetime.split('T')[0] || '—';
+  const time = datetime.split('T')[1] || '—';
+  
   const windows = getCheckedValues('windowsGroup');
+  const dust = getCheckedValues('dustGroup');
+  const cabinets = getCheckedValues('cabinetsGroup');
+  const tech = getCheckedValues('techGroup');
+  const bath = getCheckedValues('bathGroup');
+  const equipment = getCheckedValues('equipmentGroup');
+  const chem = getCheckedValues('chemGroup');
+  const extra = document.getElementById('extra').value.trim() || '—';
 
-  const text =
-`🧹 ЗАКАЗ НА УБОРКУ
+  const text = 
+`🧹 ЗАКАЗ НА УБОРКУ №${orderId}
 
-📅 Дата: ${document.getElementById('datetime').value}
-📏 Площадь: ${document.getElementById('area').value} м²
-🧹 Тип: ${document.getElementById('type').value}
-💰 Сумма: ${document.getElementById('total').value} ₽
+${formatLine('📅 Дата:', date)}
+${formatLine('⏰ Время:', time)}
+${formatLine('📏 Площадь:', document.getElementById('area').value + ' м²')}
+${formatLine('🧹 Вид уборки:', document.getElementById('type').value)}
+${formatLine('💰 Сумма:', document.getElementById('total').value + ' руб.')}
 
-👤 КЛИЕНТ
-${document.getElementById('customerName').value}
-${document.getElementById('customerPhone').value}
-${document.getElementById('customerAddress').value}, кв. ${document.getElementById('customerFlat').value}
+👤 КЛИЕНТ:
+${formatLine('Имя:', document.getElementById('customerName').value || '—')}
+${formatLine('Телефон:', document.getElementById('customerPhone').value || '—')}
+${formatLine('Адрес:', document.getElementById('customerAddress').value || '—')}
+${formatLine('Квартира:', document.getElementById('customerFlat').value || '—')}
 
-🪟 ОКНА
-Створок: ${document.getElementById('windowCount').value}
-${windows.join('\n') || '—'}
+💬 ОПИСАНИЕ РАБОТ:
+${document.getElementById('works').value || '—'}
 
-💬 ДОПОЛНИТЕЛЬНЫЕ ПОЖЕЛАНИЯ
-${document.getElementById('extra').value || '—'}
+🪟 МЫТЬЁ ОКОН:
+${formatLine('Количество створок:', document.getElementById('windowCount').value || '—')}
+${formatLine('Тип мытья:', windows)}
 
-💰 МАСТЕРУ
-${document.getElementById('masterPay').value} ₽
-`;
+🧹 ОБЕСПЫЛИВАНИЕ:
+${dust}
+
+🚪 ШКАФЫ:
+${cabinets}
+
+🔌 БЫТОВАЯ ТЕХНИКА:
+${tech}
+
+🛁 ВАННАЯ КОМНАТА:
+${bath}
+
+🛠 ОБОРУДОВАНИЕ:
+${equipment}
+
+🧴 ХИМИЯ:
+${chem}
+
+📝 ДОПОЛНИТЕЛЬНЫЕ ПОЖЕЛАНИЯ:
+${extra}
+
+💰 МАСТЕРУ:
+${document.getElementById('masterPay').value || '—'} руб.
+
+📷 Фото прикреплены менеджером в чате`;
 
   document.getElementById('out').innerText = text;
-  window.location.href = 'tg://send?text=' + encodeURIComponent(text);
+  document.getElementById('actionButtons').style.display = 'flex';
+  
+  // Сохраняем текст в глобальной переменной для использования в Telegram
+  window.generatedText = text;
 }
 
-function copyResult() {
-  const el = document.getElementById('out');
-  navigator.clipboard.writeText(el.innerText);
-  alert('Сообщение скопировано');
+function copyToClipboard() {
+  const text = document.getElementById('out').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Текст скопирован в буфер обмена!');
+  }).catch(err => {
+    console.error('Ошибка копирования: ', err);
+    alert('Не удалось скопировать текст');
+  });
+}
+
+function sendToTelegram() {
+  if (!window.generatedText) {
+    alert('Сначала сформируйте заявку');
+    return;
+  }
+  
+  const text = encodeURIComponent(window.generatedText);
+  const telegramUrl = `https://t.me/share/url?url=&text=${text}`;
+  
+  // Пытаемся открыть приложение Telegram
+  window.open(telegramUrl, '_blank');
 }
 </script>
 
