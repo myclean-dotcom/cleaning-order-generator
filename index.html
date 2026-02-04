@@ -2,104 +2,113 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Заявка на уборку</title>
+<title>Форма заявки клининг</title>
 
 <style>
 body {
   font-family: Arial, sans-serif;
-  background:#f2f4f7;
+  background:#f4f6f9;
   padding:20px;
 }
 
 .container {
   max-width:900px;
   margin:auto;
-  background:#ffffff;
-  padding:25px;
-  border-radius:14px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
 
-h1 {
+h1,h2,h3 {
+  margin-top:0;
   text-align:center;
-  margin-bottom:20px;
+}
+
+h2 {
+  background:#2d89ef;
+  color:#fff;
+  padding:6px;
+  border-radius:5px;
+  margin-top:20px;
 }
 
 .section {
-  margin-top:25px;
-  padding:18px;
-  border-radius:10px;
+  border:1px solid #ccc;
+  padding:15px;
+  border-radius:8px;
+  margin-top:15px;
   background:#fafafa;
-  border:1px solid #ddd;
 }
 
-.section h2 {
-  margin:0 0 10px 0;
-  padding:6px 10px;
-  background:#2d89ef;
-  color:#fff;
-  border-radius:6px;
-  font-size:16px;
-}
-
-label {
-  font-size:14px;
+.label-input {
+  display:flex;
+  flex-direction:column;
   margin-top:10px;
 }
 
 input, select, textarea {
+  padding:8px;
+  border-radius:5px;
+  border:1px solid #ccc;
   width:100%;
   box-sizing:border-box;
-  padding:9px;
-  border-radius:6px;
-  border:1px solid #ccc;
-  margin-top:4px;
+  height:38px;
+  font-size:14px;
 }
 
 textarea {
-  min-height:70px;
+  min-height:60px;
+  height:auto;
 }
 
 .inline {
   display:flex;
-  gap:12px;
+  gap:10px;
 }
 
 .inline > div {
   flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
+.checkbox-group {
+  display:flex;
+  flex-direction:column;
+  margin-top:5px;
 }
 
 .checkbox-group label {
-  display:flex;
-  flex-direction:column-reverse;
-  margin-top:8px;
   font-weight:normal;
+  margin-top:5px;
 }
 
 button {
-  margin-top:25px;
-  padding:14px;
+  margin-top:15px;
+  padding:12px;
   font-size:16px;
-  border:none;
-  border-radius:8px;
   cursor:pointer;
+  border:none;
   background:#2d89ef;
   color:#fff;
+  border-radius:8px;
   width:100%;
 }
 
 .copy-btn {
-  background:#4caf50;
-  margin-top:10px;
+  background:#4CAF50;
 }
 
 .result {
-  margin-top:25px;
+  margin-top:20px;
   background:#f1f1f1;
   padding:15px;
   border-radius:8px;
   white-space:pre-wrap;
   font-family: monospace;
+  font-size:14px;
+  line-height:1.4;
 }
 </style>
 </head>
@@ -107,11 +116,13 @@ button {
 <body>
 
 <div class="container">
-<h1>🧹 Заявка на уборку</h1>
+<h1>🧹 Создание заявки</h1>
 
+<!-- Основные данные -->
 <div class="section">
 <h2>Основные данные</h2>
 
+<div class="label-input">
 <label>Тип уборки</label>
 <select id="type">
   <option>Поддерживающая</option>
@@ -119,137 +130,117 @@ button {
   <option>После ремонта</option>
   <option>Химчистка</option>
 </select>
+</div>
 
 <div class="inline">
-  <div>
+  <div class="label-input">
     <label>Дата и время</label>
     <input type="datetime-local" id="datetime">
   </div>
-  <div>
+  <div class="label-input">
     <label>Площадь (м²)</label>
     <input type="number" id="area">
   </div>
 </div>
 </div>
 
+<!-- Заказчик -->
 <div class="section">
-<h2>Клиент</h2>
-<label>Имя</label><input id="clientName">
-<label>Телефон</label><input id="clientPhone">
-<label>Адрес</label><input id="clientAddress">
-<label>Квартира</label><input id="clientFlat">
+<h2>Данные заказчика</h2>
+<div class="label-input"><label>Имя</label><input id="customerName"></div>
+<div class="label-input"><label>Телефон</label><input id="customerPhone"></div>
+<div class="label-input"><label>Адрес</label><input id="customerAddress"></div>
+<div class="label-input"><label>Квартира</label><input id="customerFlat"></div>
 </div>
 
+<!-- Финансы -->
 <div class="section">
 <h2>Финансы</h2>
-<label>Сумма заказа (₽)</label>
-<input type="number" id="total" oninput="calcPay()">
+<div class="label-input"><label>Сумма заказа</label><input type="number" id="total"></div>
 
-<label>Зарплата мастеру</label>
-<select id="payType" onchange="calcPay()">
-  <option value="60">60 / 40</option>
-  <option value="70">70 / 30</option>
-  <option value="fixed">Фикс</option>
+<div class="label-input">
+<label>Зарплата мастерам</label>
+<select id="masterPayType" onchange="calculateMasterPay()">
+  <option value="60">60/40</option>
+  <option value="70">70/30</option>
+  <option value="fixed">Фиксированная</option>
 </select>
-
-<input type="number" id="masterPay" placeholder="Зарплата мастеру">
+<input type="number" id="masterPay" placeholder="Сумма мастеру">
+</div>
 </div>
 
+<!-- Работы -->
 <div class="section">
-<h2>Работы</h2>
-
-<label>Описание</label>
+<h2>Описание работ</h2>
 <textarea id="works"></textarea>
 
-<label>Количество створок</label>
-<input type="number" id="windowsCount">
-
-<div class="checkbox-group" id="windows">
-<label><input type="checkbox" value="Окна с одной стороны">Окна с одной стороны</label>
-<label><input type="checkbox" value="Окна с двух сторон">Окна с двух сторон</label>
+<h3>Мытьё окон</h3>
+<input type="number" id="windowCount" placeholder="Количество створок">
+<div class="checkbox-group" id="windowsGroup">
+  <label><input type="checkbox" value="Одна сторона"> Одна сторона</label>
+  <label><input type="checkbox" value="С двух сторон"> С двух сторон</label>
 </div>
 
-<div class="checkbox-group" id="dust">
-<label><input type="checkbox" value="Обеспыливание потолка">Обеспыливание потолка</label>
-<label><input type="checkbox" value="Обеспыливание стен">Обеспыливание стен</label>
-</div>
-
-<div class="checkbox-group" id="cabinets">
-<label><input type="checkbox" value="Шкафы снаружи">Шкафы снаружи</label>
-<label><input type="checkbox" value="Шкафы внутри">Шкафы внутри</label>
-</div>
-
-<div class="checkbox-group" id="tech">
-<label><input type="checkbox" value="Духовой шкаф">Духовой шкаф</label>
-<label><input type="checkbox" value="Плита">Плита</label>
-<label><input type="checkbox" value="Холодильник">Холодильник</label>
-<label><input type="checkbox" value="Вытяжка">Вытяжка</label>
-<label><input type="checkbox" value="Микроволновка">Микроволновка</label>
-</div>
-
-<label>Дополнительные пожелания</label>
+<h3>Дополнительные пожелания</h3>
 <textarea id="extra"></textarea>
 </div>
 
 <button onclick="send()">📨 Отправить в Telegram</button>
-<button class="copy-btn" onclick="copyText()">📋 Скопировать сообщение</button>
+<button class="copy-btn" onclick="copyResult()">📋 Скопировать сообщение</button>
 
-<div id="result" class="result"></div>
-
+<div id="out" class="result"></div>
 </div>
 
 <script>
-function calcPay() {
-  const total = Number(document.getElementById('total').value) || 0;
-  const type = document.getElementById('payType').value;
-  const out = document.getElementById('masterPay');
-  if(type === '60') out.value = Math.round(total * 0.6);
-  else if(type === '70') out.value = Math.round(total * 0.7);
+function calculateMasterPay() {
+  const total = +document.getElementById('total').value || 0;
+  const type = document.getElementById('masterPayType').value;
+  const pay = document.getElementById('masterPay');
+
+  if (type === '60') pay.value = Math.round(total * 0.6);
+  else if (type === '70') pay.value = Math.round(total * 0.7);
 }
 
-function getChecked(id) {
-  return [...document.querySelectorAll('#'+id+' input:checked')].map(e => '• ' + e.value).join('\n');
+function getCheckedValues(id) {
+  return [...document.querySelectorAll(`#${id} input:checked`)].map(i => i.value);
 }
 
 function send() {
-  const id = 'CLN-' + Date.now().toString().slice(-6);
-  const extra = document.getElementById('extra').value || '— нет';
+  calculateMasterPay();
+
+  const windows = getCheckedValues('windowsGroup');
 
   const text =
-`🧹 ЗАКАЗ НА УБОРКУ №${id}
+`🧹 ЗАКАЗ НА УБОРКУ
 
-📅 ${document.getElementById('datetime').value}
+📅 Дата: ${document.getElementById('datetime').value}
 📏 Площадь: ${document.getElementById('area').value} м²
-🧹 Вид уборки: ${document.getElementById('type').value}
+🧹 Тип: ${document.getElementById('type').value}
 💰 Сумма: ${document.getElementById('total').value} ₽
 
 👤 КЛИЕНТ
-Имя: ${clientName.value}
-Телефон: ${clientPhone.value}
-Адрес: ${clientAddress.value}, кв. ${clientFlat.value}
+${document.getElementById('customerName').value}
+${document.getElementById('customerPhone').value}
+${document.getElementById('customerAddress').value}, кв. ${document.getElementById('customerFlat').value}
 
 🪟 ОКНА
-Количество створок: ${windowsCount.value}
-${getChecked('windows')}
+Створок: ${document.getElementById('windowCount').value}
+${windows.join('\n') || '—'}
 
-🧹 РАБОТЫ
-${getChecked('dust')}
-${getChecked('cabinets')}
-${getChecked('tech')}
+💬 ДОПОЛНИТЕЛЬНЫЕ ПОЖЕЛАНИЯ
+${document.getElementById('extra').value || '—'}
 
-💬 ДОПОЛНИТЕЛЬНО
-${extra}
+💰 МАСТЕРУ
+${document.getElementById('masterPay').value} ₽
+`;
 
-💰 Мастеру: ${masterPay.value} ₽
-
-📷 Фото прикреплены менеджером в чате`;
-
-  document.getElementById('result').innerText = text;
-  window.location.href = 'tg://msg?text=' + encodeURIComponent(text);
+  document.getElementById('out').innerText = text;
+  window.location.href = 'tg://send?text=' + encodeURIComponent(text);
 }
 
-function copyText() {
-  navigator.clipboard.writeText(document.getElementById('result').innerText);
+function copyResult() {
+  const el = document.getElementById('out');
+  navigator.clipboard.writeText(el.innerText);
   alert('Сообщение скопировано');
 }
 </script>
